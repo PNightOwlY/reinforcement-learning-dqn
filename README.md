@@ -92,9 +92,9 @@ We suggest starting with the following hyperparameters:
 
 While these should work, they are not optimal and you may play around with hyperparameters if you want.
 
-
-
-<img src="result/pong.gif" width="200" height="250"/>
+<div align="center">
+  <img src="result/pong.gif" width="200" height="250"/>
+</div>
 
 ## Results of Pong
 
