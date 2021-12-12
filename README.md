@@ -29,9 +29,11 @@ You will be implementing DQN to solve [CartPole](https://gym.openai.com/envs/Car
 <img src="result/cartpole.gif" width="400" height="400"/>
 </div>
 
-
-
 For different reward functions, the convergence of models at different speeds varies greatly. We have customized a function, when the angle of the joystick is closer to 90 degrees and the position of the trolley is closer to the center of mass, the reward is higher, the covergece speed is higher than we simple define the reward as -1 when the situation done.
+
+<img src="result/cartplot-analysis.png">
+
+As you can see in experiment 1 and *1, the hyperparameters are the same but with different reward functions. In experiment 1, the reward function is simple, the agent gets reward 1 when the game was not done, otherwise, the reward is -1. But in experiment *1, we changed the reward function which is based on the state. When the car is closer to the midpoint, the reward is higher. When the angle between the flag and the horizontal line is closer to 90 degrees, the reward is higher, and vice versa. The results revealed that a good reward function can make a huge difference in performance when it comes to Reinforcement Learning, which can speed up the process of agent learning.
 
 ## Learn to play Pong
 
@@ -92,4 +94,39 @@ While these should work, they are not optimal and you may play around with hyper
 
 
 
-<img src="result/pong.gif" width="200" height="200"/>
+<img src="result/pong.gif" width="200" height="250"/>
+
+## Results of Pong
+
+**Note: The more detail analysis can be viewed in analysis folder.**
+
+All the experiments are implemented in Google Colab with 2.5 million frames. The parameters are explained as follows.
+
+<img src="result/pong-table.png">
+
+### Discussion
+
+The curve in the resulting figures may not be a good description of the performance of the current model, because we take the average of the most recent 10 episodes as the score of the current model. So when the experiment is over, we re-evaluated the average value ten times with the saved model. This result will be more representative.
+
+We implement multiple experiments based on the environment Pong-v0. In general, the results are basically satisfactory. The configuration of the model and its performance(Column Average reward) are displayed as Table 2.
+
+#### Replay Memory Size
+
+Figure 3 visualizes the results of Experiment 1, 2 and 3. It can be observed from 3a that when the replay memory size is 10000, the performance of the model is unstable, comparing with the averaged reward trend in Experiment 3. The reason for the differences is that the larger the experience replay, the less likely you will sample correlated elements, hence the more stable the training of the NN will be. However, a large experience replay requires a lot of memory so the training process is slower. Therefore, there is a trade-off between training stability (of the NN) and memory requirements. In these three experiments, the gamma valued 1, so the model is unbiased but with high variance, and also we have done the Experiment 2 twice, second time is basically satisfactory (as you can see in the graph), but first Experiment 2 were really poor which is almost same with Experiment 3. The result varies a lot among these two experiment due to the gamma equals to 1.
+
+#### Learning Rate
+
+Now we discuss how learning rate affects the averaged reward. It is found from Figure 4 that a high learning rate has relatively large volatility on the overall curve, and the learning ability is not stable enough, but the learning ability will be stronger.
+
+#### Win Replay Memory
+
+Here we try a new way to train our model and create a win replay memory for those frames that our agent gets reward 1. After 0.4 million frames, we start to randomly pick 5 samples from this win memory and then train the model every 5 thousand frames. The idea is for this kind of memory, the loss may vary a lot, so the model will tune the parameters more. But the results show that the performance is basically the same or even worse than that of learning rate = 0.0002.
+
+### Summary
+
+Each experiment takes 4h on Google Colab. We achieve 10-time average reward of 7.9 as the best result that is better than Experiment 1(suggested configuration on Studium), although the result is somewhat random and may be unreproducible. It seems that the models with higher learning rate(0.002) perform better, but its reward influtuates more sharply.
+
+<img src="result/Mean Reward vs. Episode in CartPole.png">
+
+<img src="result/Mean Reward vs. Frames(Various Replay Memory Sizes).png">
+
